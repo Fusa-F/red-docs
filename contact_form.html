@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>お問い合わせ - R.E.D - Random Eto Defense -</title>
+    <style>
+      :root {
+        --primary-color: #b83230;
+        --primary-light: #d45a58;
+        --background: #fdf5f5;
+        --text-color: #4a4a4a;
+        --text-light: #777;
+        --border-color: #e8dcdc;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans",
+          "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+        background-color: var(--background);
+        color: var(--text-color);
+        padding: 20px;
+        line-height: 1.8;
+      }
+
+      .container {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 8px;
+        text-align: center;
+      }
+
+      .subtitle {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        text-align: center;
+        margin-bottom: 24px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 8px;
+      }
+
+      .required {
+        color: var(--primary-color);
+        margin-left: 4px;
+      }
+
+      select,
+      input[type="email"],
+      textarea {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background-color: #fff;
+        color: var(--text-color);
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23b83230' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 20px;
+        padding-right: 44px;
+      }
+
+      select:focus,
+      input[type="email"]:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(184, 50, 48, 0.15);
+      }
+
+      textarea {
+        min-height: 150px;
+        resize: vertical;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 16px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--primary-light) 100%
+        );
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        margin-top: 8px;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(184, 50, 48, 0.3);
+      }
+
+      .submit-btn:active {
+        transform: translateY(0);
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .note {
+        font-size: 0.75rem;
+        color: var(--text-light);
+        margin-top: 16px;
+        text-align: center;
+      }
+
+      .privacy-note {
+        font-size: 0.6875rem;
+        color: var(--text-light);
+        margin-top: 8px;
+        text-align: center;
+      }
+
+      .sending {
+        display: none;
+        text-align: center;
+        color: var(--text-light);
+        margin-top: 16px;
+      }
+
+      .success-view {
+        display: none;
+        text-align: center;
+        padding: 40px 20px;
+      }
+
+      .success-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 24px;
+        background-color: rgba(184, 50, 48, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .success-icon svg {
+        width: 48px;
+        height: 48px;
+        color: var(--primary-color);
+      }
+
+      .success-title {
+        font-size: 1.375rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 12px;
+      }
+
+      .success-message {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        line-height: 1.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- フォーム表示 -->
+      <div id="formView">
+        <h1>お問い合わせ</h1>
+        <p class="subtitle">ご意見・ご要望をお聞かせください</p>
+
+        <!-- 隠しiframeでフォーム送信結果を受け取る -->
+        <iframe
+          name="hidden_iframe"
+          id="hidden_iframe"
+          style="display: none"
+        ></iframe>
+
+        <form id="contactForm" method="POST" target="hidden_iframe">
+          <div class="form-group">
+            <label for="inquiry-type">
+              お問い合わせの種類<span class="required">*</span>
+            </label>
+            <select id="inquiry-type" required>
+              <option value="" disabled selected>選択してください</option>
+              <option value="アプリの不具合・バグについて">
+                アプリの不具合・バグについて
+              </option>
+              <option value="機能の要望">機能の要望</option>
+              <option value="データの追加・修正依頼">
+                データの追加・修正依頼
+              </option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="email">
+              メールアドレス<span class="required">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              placeholder="example@email.com"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="content">
+              お問い合わせ内容<span class="required">*</span>
+            </label>
+            <textarea
+              id="content"
+              placeholder="具体的な内容をご記入ください"
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            送信する
+          </button>
+
+          <p class="sending" id="sendingText">送信中...</p>
+
+          <p class="note">
+            内容は確認後、順次対応いたします。<br />回答が必要な場合は、メールにてご連絡いたします。
+          </p>
+          <p class="privacy-note">
+            ※ 端末情報（OS・アプリバージョン）が自動送信されます
+          </p>
+        </form>
+      </div>
+
+      <!-- 送信完了表示 -->
+      <div id="successView" class="success-view">
+        <div class="success-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <p class="success-title">送信完了</p>
+        <p class="success-message">
+          お問い合わせありがとうございます。<br />内容を確認の上、順次対応いたします。
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // =============================================
+      // Google Form 設定
+      // =============================================
+      var GOOGLE_FORM_ID =
+        "1FAIpQLScU0YvRuMkEzwmZxgaT9DnAti8TFcD4_WF4c2G6KWFG1wx6OQ";
+      var ENTRY_INQUIRY_TYPE = "entry.1555636391";
+      var ENTRY_EMAIL = "entry.26527252";
+      var ENTRY_CONTENT = "entry.9895249";
+      var ENTRY_APP_VERSION = "entry.1639925100";
+      var ENTRY_OS_VERSION = "entry.450557926";
+      // =============================================
+
+      // URLパラメータから端末情報を取得
+      var urlParams = new URLSearchParams(window.location.search);
+      var appVersion = urlParams.get("appVersion") || "";
+      var deviceInfo = urlParams.get("deviceInfo") || "";
+
+      // フォーム送信処理
+      var form = document.getElementById("contactForm");
+      var submitBtn = document.getElementById("submitBtn");
+      var sendingText = document.getElementById("sendingText");
+      var formView = document.getElementById("formView");
+      var successView = document.getElementById("successView");
+
+      // フォームのaction URLを設定
+      var formUrl =
+        "https://docs.google.com/forms/u/0/d/e/" +
+        GOOGLE_FORM_ID +
+        "/formResponse";
+      form.action = formUrl;
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "送信中...";
+        sendingText.style.display = "block";
+
+        // Google Form用のパラメータを構築
+        var params = new URLSearchParams();
+        params.append(
+          ENTRY_INQUIRY_TYPE,
+          document.getElementById("inquiry-type").value,
+        );
+        params.append(ENTRY_EMAIL, document.getElementById("email").value);
+        params.append(ENTRY_CONTENT, document.getElementById("content").value);
+        params.append(ENTRY_APP_VERSION, appVersion);
+        params.append(ENTRY_OS_VERSION, deviceInfo);
+
+        // fetchで送信（CORSエラーは無視、送信自体は成功する）
+        fetch(formUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: params.toString(),
+        })
+          .then(function () {
+            formView.style.display = "none";
+            successView.style.display = "block";
+          })
+          .catch(function () {
+            // no-corsモードではレスポンスが不透明になるが、送信自体は成功する
+            formView.style.display = "none";
+            successView.style.display = "block";
+          });
+      });
+    </script>
+  </body>
+</html>
